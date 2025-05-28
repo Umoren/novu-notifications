@@ -1,0 +1,38 @@
+{
+  "name": "novu-notifications-backend",
+  "version": "1.0.0",
+  "description": "Self-hosted notification backend with Novu + Upstash + Resend",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@novu/api": "^1.1.0",
+    "@react-email/components": "^0.0.41",
+    "@react-email/render": "^1.1.2",
+    "@upstash/qstash": "^2.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "escape-html": "^1.0.3",
+    "express": "^5.1.0",
+    "he": "^1.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "resend": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.23",
+    "@types/nodemailer": "^6.4.17",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
