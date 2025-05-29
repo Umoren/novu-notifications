@@ -54,7 +54,6 @@ router.post('/register-push-token', async (req, res) => {
 });
 
 // Send immediate push notification
-// Send immediate push notification
 router.post('/push-notification', async (req, res) => {
     try {
         const { userId, title, body, data, token } = req.body;
@@ -118,6 +117,75 @@ router.post('/push-notification', async (req, res) => {
         });
         res.status(500).json({
             error: 'Failed to send push notification',
+            message: error.message
+        });
+    }
+});
+
+router.post('/delay-push-notifications', async (req, res) => {
+    try {
+        const {
+            userId,
+            title,
+            body,
+            data = {},
+            token,
+            delayAmount = 30,
+            delayUnit = 'seconds'
+        } = req.body;
+
+        const novu = req.app.locals.novu;
+
+        logger.info('Delayed push notification request', {
+            userId, title, delay: `${delayAmount} ${delayUnit}`, hasToken: !!token
+        });
+
+        if (!userId || !title || !body) {
+            return res.status(400).json({
+                error: 'Missing required fields: userId, title, body'
+            });
+        }
+
+        const validUnits = ['seconds', 'minutes', 'hours', 'days'];
+        if (!validUnits.includes(delayUnit)) {
+            return res.status(400).json({
+                error: `Invalid delay unit. Must be one of: ${validUnits.join(', ')}`
+            });
+        }
+
+        const triggerPayload = {
+            to: {
+                subscriberId: userId,
+                ...(token && {
+                    channels: [{
+                        providerId: 'expo',
+                        credentials: { deviceTokens: [token] }
+                    }]
+                })
+            },
+            payload: { title, body, data },
+            overrides: {
+                delay: { amount: delayAmount, unit: delayUnit }
+            }
+        };
+
+        const result = await novu.trigger('delay-push-notifications', triggerPayload);
+
+        logger.info('Delayed workflow triggered', {
+            transactionId: result.data?.transactionId,
+            userId,
+            delay: `${delayAmount} ${delayUnit}`
+        });
+
+        res.json({
+            message: `Notification scheduled for ${delayAmount} ${delayUnit} from now`,
+            transactionId: result.data?.transactionId,
+            success: true
+        });
+    } catch (error) {
+        logger.error('Delayed push notification error', { error: error.message, userId: req.body.userId });
+        res.status(500).json({
+            error: 'Failed to schedule delayed push notification',
             message: error.message
         });
     }
