@@ -10,7 +10,7 @@ This project demonstrates migrating from expensive SaaS notification services to
 
 ### 📊 Cost Comparison
 
-| Service | Knock.app (Previous) | Our Stack | Savings |
+| Service | Alternatives (Previous) | Our Stack | Savings |
 |---------|---------------------|-----------|---------|
 | **10K notifications** | $100-500/month | $6-26/month | **95-98%** |
 | **100K notifications** | $500-2000/month | $26-46/month | **95-98%** |
